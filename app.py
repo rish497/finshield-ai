@@ -21,15 +21,14 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-
 app = Flask(__name__)
 
-secret = os.getenv("SECRET_KEY")
+secret = os.environ.get("SECRET_KEY")
 if not secret:
-    raise Exception("SECRET_KEY not set in environment!")
+    print("WARNING: SECRET_KEY missing!")
+    secret = "temporary-dev-key"
 
 app.secret_key = secret
-
 
 # -------------------------
 # GOOGLE AUTH
