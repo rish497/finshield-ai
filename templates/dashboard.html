@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>
+        FinShield AI Dashboard
+    </title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static',
+          filename='style.css') }}">
+
+    <link rel="preconnect"
+          href="https://fonts.googleapis.com">
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+          rel="stylesheet">
+</head>
+
+<body>
+
+<div class="sidebar">
+
+    <div>
+
+        <div class="logo">
+            <h2>
+                🛡 FinShield AI
+            </h2>
+        </div>
+
+        <div class="menu">
+
+            <a class="active"
+               href="#">
+                Dashboard
+            </a>
+
+            <a href="#">
+                Threats
+            </a>
+
+            <a href="#">
+                Analytics
+            </a>
+
+            <a href="#">
+                Settings
+            </a>
+
+        </div>
+
+    </div>
+
+    <a class="logout-btn"
+       href="/logout">
+        Logout
+    </a>
+
+</div>
+
+
+<div class="main-content">
+
+    <div class="topbar">
+
+        <div>
+
+            <h1>
+                Welcome back,
+                {{ user.name.split(' ')[0] }}
+            </h1>
+
+            <p>
+                Your inbox is actively protected.
+            </p>
+
+        </div>
+
+        <div class="profile">
+
+            <img src="{{ user.picture }}">
+
+            <div>
+                <h4>
+                    {{ user.name }}
+                </h4>
+
+                <span>
+                    {{ user.email }}
+                </span>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="hero-card">
+
+        <div>
+
+            <span class="security-tag">
+                ACTIVE PROTECTION
+            </span>
+
+            <h2>
+                Inbox Threat Level
+            </h2>
+
+            <h1>
+                {{ threat_level }}
+            </h1>
+
+            <p>
+                FinShield AI is actively
+                monitoring your Gmail
+                for scams, phishing,
+                and suspicious financial
+                activity.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="stats-grid">
+
+        <div class="card">
+
+            <h4>
+                Protected Emails
+            </h4>
+
+            <h1>
+                {{ protected_emails }}
+            </h1>
+
+        </div>
+
+
+        <div class="card">
+
+            <h4>
+                Threats Detected
+            </h4>
+
+            <h1>
+                {{ threats_detected }}
+            </h1>
+
+        </div>
+
+
+        <div class="card">
+
+            <h4>
+                High Risk Emails
+            </h4>
+
+            <h1>
+                {{ high_risk }}
+            </h1>
+
+        </div>
+
+    </div>
+
+
+    <div class="content-grid">
+
+        <div class="large-card">
+
+            <h2>
+                Recent Threat Detections
+            </h2>
+
+            {% if recent_scams %}
+
+                {% for scam in recent_scams %}
+
+                <div class="threat-item">
+
+                    <div>
+
+                        <h3>
+                            ⚠ {{ scam.subject }}
+                        </h3>
+
+                        <p>
+                            Sender:
+                            {{ scam.sender }}
+                        </p>
+
+                        <p>
+                            Risk Score:
+                            {{ scam.risk }}%
+                        </p>
+
+                        <p>
+                            Reason:
+                            {{ scam.reason }}
+                        </p>
+
+                    </div>
+
+                    {% if scam.risk >= 80 %}
+
+                        <span class="danger">
+                            High Risk
+                        </span>
+
+                    {% elif scam.risk >= 50 %}
+
+                        <span class="warning">
+                            Medium Risk
+                        </span>
+
+                    {% else %}
+
+                        <span class="safe">
+                            Low Risk
+                        </span>
+
+                    {% endif %}
+
+                </div>
+
+                {% endfor %}
+
+            {% else %}
+
+                <p>
+                    No threats detected yet.
+                </p>
+
+            {% endif %}
+
+        </div>
+
+
+        <div class="small-card">
+
+            <h2>
+                Threat Intelligence
+            </h2>
+
+            <div class="intel-item">
+                🚨 Banking phishing
+                scams increasing
+            </div>
+
+            <div class="intel-item">
+                🚨 High-risk phrase:
+                “Claim reward now”
+            </div>
+
+            <div class="intel-item">
+                🚨 Fake KYC updates
+                remain common
+            </div>
+
+            <div class="intel-item">
+                🚨 Suspicious links
+                are auto-flagged
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

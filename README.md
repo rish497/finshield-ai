@@ -1,2 +1,0 @@
-# finshield-ai
-AI AGENT
