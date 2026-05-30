@@ -224,7 +224,7 @@ def logout():
 
 
 if __name__ == "__main__":
-    print("SECRET KEY:", os.getenv("SECRET_KEY"))
+    print("SECRET_KEY =", os.getenv("SECRET_KEY"))
     app.run(
         debug=True
     )
