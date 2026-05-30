@@ -1,87 +1,52 @@
+import os
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
-from google_auth_oauthlib.flow import (
-    InstalledAppFlow
-)
+from googleapiclient.discovery import build
 
-from googleapiclient.discovery import (
-    build
-)
+SCOPES = ["https://www.googleapis.com/auth/gmail.modify"]
 
-import os.path
-
-
-SCOPES = [
-    "https://www.googleapis.com/auth/gmail.modify"
-]
+BASE_DIR = os.path.dirname(__file__)
+TOKEN_PATH = os.path.join(BASE_DIR, "token.json")
 
 
 def authenticate_gmail():
 
     creds = None
 
-    if os.path.exists(
-        "token.json"
-    ):
-
-        creds = (
-            Credentials
-            .from_authorized_user_file(
-                "token.json",
-                SCOPES
-            )
+    # -------------------------
+    # LOAD EXISTING TOKEN
+    # -------------------------
+    if os.path.exists(TOKEN_PATH):
+        creds = Credentials.from_authorized_user_file(
+            TOKEN_PATH,
+            SCOPES
         )
 
+    # -------------------------
+    # REFRESH IF POSSIBLE
+    # -------------------------
+    if creds and creds.expired and creds.refresh_token:
+        try:
+            creds.refresh(Request())
+        except Exception as e:
+            print("Token refresh failed:", e)
+            creds = None
+
+    # -------------------------
+    # CRITICAL PRODUCTION CHECK
+    # -------------------------
     if not creds or not creds.valid:
+        raise Exception(
+            "No valid Gmail token found. "
+            "Run OAuth locally once and upload token.json to Railway."
+        )
 
-        if (
-            creds
-            and creds.expired
-            and creds.refresh_token
-        ):
-
-            creds.refresh(
-                Request()
-            )
-
-        else:
-
-            flow = (
-                InstalledAppFlow
-                .from_client_secrets_file(
-                    "credentials.json",
-                    SCOPES
-                )
-            )
-
-            creds = (
-                flow.run_local_server(
-                    port=0
-                )
-            )
-
-        with open(
-            "token.json",
-            "w"
-        ) as token:
-
-            token.write(
-                creds.to_json()
-            )
-
-    service = build(
-        "gmail",
-        "v1",
-        credentials=creds
-    )
-
-    return service
+    # -------------------------
+    # BUILD SERVICE
+    # -------------------------
+    return build("gmail", "v1", credentials=creds)
 
 
 if __name__ == "__main__":
-
-    authenticate_gmail()
-
-    print(
-        "Gmail connected successfully!"
-    )
+    service = authenticate_gmail()
+    print("Gmail connected successfully!")

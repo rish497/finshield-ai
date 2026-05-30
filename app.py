@@ -24,9 +24,11 @@ load_dotenv()
 
 app = Flask(__name__)
 
-app.secret_key = os.getenv(
-    "SECRET_KEY"
-)
+secret = os.getenv("SECRET_KEY")
+if not secret:
+    raise Exception("SECRET_KEY not set in environment!")
+
+app.secret_key = secret
 
 
 # -------------------------
@@ -224,7 +226,6 @@ def logout():
 
 
 if __name__ == "__main__":
-    print("SECRET_KEY =", os.getenv("SECRET_KEY"))
     app.run(
         debug=True
     )
