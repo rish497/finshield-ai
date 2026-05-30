@@ -135,78 +135,79 @@ def authorize():
 @app.route("/dashboard")
 def dashboard():
 
-    if (
-        "user"
-        not in session
-    ):
+    if "user" not in session:
+        return redirect("/")
 
-        return redirect(
-            "/"
+    # -------------------------
+    # DATA FETCH
+    # -------------------------
+
+    stats = get_dashboard_stats() or {}
+
+    recent_scams = get_recent_scams() or []
+
+    top_category = get_top_scam_category() or "No Data"
+
+    average_risk = get_average_risk() or 0
+
+    # -------------------------
+    # HIGH RISK CALCULATION
+    # -------------------------
+
+    high_risk = sum(
+        1 for scam in recent_scams
+        if scam.get("risk", 0) >= 80
+    )
+
+    # -------------------------
+    # SAFE STATS EXTRACTION
+    # -------------------------
+
+    protected_emails = stats.get(
+        "protected_emails",
+        stats.get("protected", 0)
+    )
+
+    threats_detected = stats.get(
+        "threats_detected",
+        stats.get("threats", 0)
+    )
+
+    # -------------------------
+    # THREAT LEVEL (AI SCORE)
+    # -------------------------
+
+    threat_level = max(
+        0,
+        min(
+            100,
+            100 - (high_risk * 10)
         )
-
-    stats = (
-        get_dashboard_stats()
     )
 
-    recent_scams = (
-        get_recent_scams()
-    )
-
-    top_category = (
-        get_top_scam_category()
-    )
-
-    average_risk = (
-        get_average_risk()
-    )
-
-    high_risk = 0
-
-    for scam in recent_scams:
-
-        if (
-            scam.get(
-                "risk",
-                0
-            ) >= 80
-        ):
-
-            high_risk += 1
+    # -------------------------
+    # RENDER
+    # -------------------------
 
     return render_template(
 
         "dashboard.html",
 
-        user=session[
-            "user"
-        ],
+        user=session["user"],
 
-        protected_emails=
-        stats[
-            "protected"
-        ],
+        protected_emails=protected_emails,
 
-        threats_detected=
-        stats[
-            "threats"
-        ],
+        threats_detected=threats_detected,
 
-        threat_level=
-        stats[
-            "level"
-        ],
+        threat_level=threat_level,
 
-        high_risk=
-        high_risk,
+        high_risk=high_risk,
 
-        recent_scams=
-        recent_scams,
+        recent_scams=recent_scams,
 
-        top_category=
-        top_category,
+        top_category=top_category,
 
-        average_risk=
-        average_risk
+        average_risk=average_risk
     )
 
 
