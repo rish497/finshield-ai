@@ -34,7 +34,8 @@ def save_scam_email(
     sender,
     risk,
     reason,
-    category="Phishing"
+    category,
+    threat_type
 ):
 
     scam_collection.insert_one({
@@ -53,6 +54,9 @@ def save_scam_email(
 
         "category":
         category,
+
+        "threat_type":
+        threat_type,
 
         "reason":
         reason,
@@ -118,3 +122,86 @@ def get_recent_scams():
     )
 
     return scams
+
+def get_top_scam_category():
+
+    pipeline = [
+
+        {
+            "$group": {
+                "_id":
+                "$category",
+
+                "count":
+                {
+                    "$sum": 1
+                }
+            }
+        },
+
+        {
+            "$sort": {
+                "count": -1
+            }
+        },
+
+        {
+            "$limit": 1
+        }
+    ]
+
+    result = list(
+        scam_collection.aggregate(
+            pipeline
+        )
+    )
+
+    if result:
+
+        return result[
+            0
+        ][
+            "_id"
+        ]
+
+    return "No Data"
+
+
+def get_average_risk():
+
+    pipeline = [
+
+        {
+            "$group": {
+
+                "_id":
+                None,
+
+                "avgRisk":
+                {
+                    "$avg":
+                    "$risk"
+                }
+            }
+        }
+    ]
+
+    result = list(
+
+        scam_collection
+        .aggregate(
+            pipeline
+        )
+
+    )
+
+    if result:
+
+        return round(
+            result[0][
+                "avgRisk"
+            ],
+            1
+        )
+
+    return 0

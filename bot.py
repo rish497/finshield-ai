@@ -126,6 +126,16 @@ while True:
                     reason=
                     result[
                         "reason"
+                    ],
+
+                    category=
+                    result[
+                        "category"
+                    ],
+
+                    threat_type=
+                    result[
+                        "threat_type"
                     ]
                 )
 

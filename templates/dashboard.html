@@ -1,7 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0">
 
@@ -18,37 +21,43 @@
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
           rel="stylesheet">
+
 </head>
 
 <body>
+
 
 <div class="sidebar">
 
     <div>
 
         <div class="logo">
+
             <h2>
                 🛡 FinShield AI
             </h2>
+
         </div>
 
         <div class="menu">
 
             <a class="active"
-               href="#">
+               href="#dashboard">
+
                 Dashboard
+
             </a>
 
-            <a href="#">
+            <a href="#threats">
+
                 Threats
+
             </a>
 
-            <a href="#">
+            <a href="#analytics">
+
                 Analytics
-            </a>
 
-            <a href="#">
-                Settings
             </a>
 
         </div>
@@ -57,34 +66,46 @@
 
     <a class="logout-btn"
        href="/logout">
+
         Logout
+
     </a>
 
 </div>
 
 
-<div class="main-content">
+
+<div class="main-content"
+     id="dashboard">
+
 
     <div class="topbar">
 
         <div>
 
             <h1>
+
                 Welcome back,
                 {{ user.name.split(' ')[0] }}
+
             </h1>
 
             <p>
-                Your inbox is actively protected.
+
+                FinShield AI is actively
+                protecting your inbox.
+
             </p>
 
         </div>
+
 
         <div class="profile">
 
             <img src="{{ user.picture }}">
 
             <div>
+
                 <h4>
                     {{ user.name }}
                 </h4>
@@ -92,6 +113,7 @@
                 <span>
                     {{ user.email }}
                 </span>
+
             </div>
 
         </div>
@@ -99,33 +121,44 @@
     </div>
 
 
+
     <div class="hero-card">
 
         <div>
 
             <span class="security-tag">
-                ACTIVE PROTECTION
+
+                AI THREAT MONITORING
+
             </span>
 
             <h2>
-                Inbox Threat Level
+
+                FinShield Threat Intelligence
+
             </h2>
 
             <h1>
-                {{ threat_level }}
+
+                {{ 100 - (high_risk * 3) }}%
+
             </h1>
 
             <p>
-                FinShield AI is actively
-                monitoring your Gmail
-                for scams, phishing,
-                and suspicious financial
+
+                FinShield AI continuously
+                scans Gmail for scams,
+                phishing attempts,
+                impersonation, fake
+                rewards, and suspicious
                 activity.
+
             </p>
 
         </div>
 
     </div>
+
 
 
     <div class="stats-grid">
@@ -168,112 +201,279 @@
 
         </div>
 
+
+        <div class="card">
+
+            <h4>
+                Top Scam Type
+            </h4>
+
+            <h1>
+                {{ top_category }}
+            </h1>
+
+        </div>
+
+
+        <div class="card">
+
+            <h4>
+                Average Risk
+            </h4>
+
+            <h1>
+                {{ average_risk }}%
+            </h1>
+
+        </div>
+
     </div>
+
 
 
     <div class="content-grid">
 
-        <div class="large-card">
+
+        <div class="large-card"
+             id="threats">
 
             <h2>
                 Recent Threat Detections
             </h2>
 
+
             {% if recent_scams %}
 
-                {% for scam in recent_scams %}
+            {% for scam in recent_scams %}
 
-                <div class="threat-item">
+            <div class="threat-item">
 
-                    <div>
+                <div>
 
-                        <h3>
-                            ⚠ {{ scam.subject }}
-                        </h3>
+                    <h3>
 
-                        <p>
-                            Sender:
-                            {{ scam.sender }}
-                        </p>
+                        ⚠ {{ scam.subject }}
 
-                        <p>
-                            Risk Score:
-                            {{ scam.risk }}%
-                        </p>
+                    </h3>
 
-                        <p>
-                            Reason:
-                            {{ scam.reason }}
-                        </p>
+                    <p>
 
-                    </div>
+                        Sender:
+                        {{ scam.sender }}
 
-                    {% if scam.risk >= 80 %}
+                    </p>
 
-                        <span class="danger">
-                            High Risk
-                        </span>
+                    <p>
 
-                    {% elif scam.risk >= 50 %}
+                        Category:
+                        {{ scam.category }}
 
-                        <span class="warning">
-                            Medium Risk
-                        </span>
+                    </p>
 
-                    {% else %}
+                    <p>
 
-                        <span class="safe">
-                            Low Risk
-                        </span>
+                        Threat Type:
+                        {{ scam.threat_type }}
 
-                    {% endif %}
+                    </p>
+
+                    <p>
+
+                        Risk Score:
+                        {{ scam.risk }}%
+
+                    </p>
 
                 </div>
 
-                {% endfor %}
+
+                {% if scam.risk >= 80 %}
+
+                <span class="danger">
+
+                    High Risk
+
+                </span>
+
+                {% elif scam.risk >= 50 %}
+
+                <span class="warning">
+
+                    Medium Risk
+
+                </span>
+
+                {% else %}
+
+                <span class="safe">
+
+                    Low Risk
+
+                </span>
+
+                {% endif %}
+
+            </div>
+
+            {% endfor %}
 
             {% else %}
 
-                <p>
-                    No threats detected yet.
-                </p>
+            <div class="threat-item">
+
+                <div>
+
+                    <h3>
+
+                        ✅ No threats detected
+
+                    </h3>
+
+                    <p>
+
+                        Your inbox is
+                        currently safe.
+
+                    </p>
+
+                </div>
+
+            </div>
 
             {% endif %}
 
         </div>
 
 
+
         <div class="small-card">
 
             <h2>
+
                 Threat Intelligence
+
             </h2>
 
+
             <div class="intel-item">
+
                 🚨 Banking phishing
                 scams increasing
+
             </div>
 
-            <div class="intel-item">
-                🚨 High-risk phrase:
-                “Claim reward now”
-            </div>
 
             <div class="intel-item">
-                🚨 Fake KYC updates
+
+                🚨 Fake KYC scams
                 remain common
+
             </div>
 
+
             <div class="intel-item">
+
+                🚨 UPI fraud emails
+                are trending
+
+            </div>
+
+
+            <div class="intel-item">
+
                 🚨 Suspicious links
-                are auto-flagged
+                auto-flagged by AI
+
             </div>
 
         </div>
 
     </div>
 
+
+
+    <div class="large-card"
+         id="analytics"
+         style="margin-top: 30px;">
+
+        <h2>
+
+            Threat Analytics
+
+        </h2>
+
+
+        <div class="stats-grid">
+
+            <div class="card">
+
+                <h4>
+
+                    Current Threat Level
+
+                </h4>
+
+                <h1>
+
+                    {{ threat_level }}
+
+                </h1>
+
+            </div>
+
+
+            <div class="card">
+
+                <h4>
+
+                    Top Threat Category
+
+                </h4>
+
+                <h1>
+
+                    {{ top_category }}
+
+                </h1>
+
+            </div>
+
+
+            <div class="card">
+
+                <h4>
+
+                    Average Threat Risk
+
+                </h4>
+
+                <h1>
+
+                    {{ average_risk }}%
+
+                </h1>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
 </div>
+
+
+
+<script>
+
+setInterval(() => {
+
+    location.reload()
+
+}, 15000)
+
+</script>
+
 
 </body>
 </html>

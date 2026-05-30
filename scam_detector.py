@@ -1,7 +1,8 @@
 import google.generativeai as genai
-import os
-
 from dotenv import load_dotenv
+import os
+import json
+import re
 
 load_dotenv()
 
@@ -23,77 +24,103 @@ def analyze_email(
 ):
 
     prompt = f"""
-You are a financial
-fraud detection AI.
+
+You are FinShield AI,
+an advanced financial
+fraud detection system.
 
 Analyze this email.
 
-Subject:
+EMAIL SUBJECT:
 {subject}
 
-Sender:
+SENDER:
 {sender}
 
-Body:
+BODY:
 {body}
 
-Determine:
+Detect:
 
-1. Is it a scam?
-2. Risk score (0-100)
-3. Reason
+1. Banking scam
+2. UPI scam
+3. Investment fraud
+4. Crypto scam
+5. Fake refund
+6. KYC scam
+7. Government impersonation
+8. Medical scam
+9. Lottery scam
+10. Job scam
+11. Phishing attempt
+12. Identity theft
+13. General fraud
 
-Respond ONLY in this format:
+Check for:
 
-SCAM: YES or NO
-RISK: number
-REASON: short reason
+- urgency
+- fear tactics
+- fake rewards
+- impersonation
+- suspicious links
+- money requests
+- mismatched sender identity
+- emotional manipulation
+
+Respond ONLY in JSON.
+
+Example:
+
+{{
+"is_scam": true,
+"risk": 92,
+"category": "Banking Scam",
+"threat_type": "Phishing",
+"reason": "Urgency and fake reward tactic",
+"recommended_action":
+"Block sender immediately"
+}}
+
 """
 
     response = model.generate_content(
         prompt
     )
 
-    text = response.text
+    text = response.text.strip()
 
-    is_scam = (
-        "SCAM: YES"
-        in text.upper()
-    )
+    text = re.sub(
+        r"```json|```",
+        "",
+        text
+    ).strip()
 
-    risk = 0
-    reason = "Unknown"
+    try:
 
-    lines = text.split("\n")
+        result = json.loads(
+            text
+        )
 
-    for line in lines:
+        return result
 
-        if "RISK:" in line:
+    except:
 
-            try:
-                risk = int(
-                    line
-                    .split(":")[1]
-                    .strip()
-                )
-            except:
-                pass
+        return {
+            "is_scam":
+            False,
 
-        if "REASON:" in line:
+            "risk":
+            0,
 
-            reason = (
-                line
-                .split(":")[1]
-                .strip()
-            )
+            "category":
+            "Unknown",
 
-    return {
-        "is_scam":
-        is_scam,
+            "threat_type":
+            "Unknown",
 
-        "risk":
-        risk,
+            "reason":
+            "Parsing failed",
 
-        "reason":
-        reason
-    }
+            "recommended_action":
+            "Manual review"
+        }

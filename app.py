@@ -2,7 +2,9 @@ import os
 
 from mongo_service import (
     get_dashboard_stats,
-    get_recent_scams
+    get_recent_scams,
+    get_top_scam_category,
+    get_average_risk
 )
 
 from flask import (
@@ -19,6 +21,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+
 app = Flask(__name__)
 
 app.secret_key = os.getenv(
@@ -33,7 +36,7 @@ app.secret_key = os.getenv(
 oauth = OAuth(app)
 
 google = oauth.register(
-    name='google',
+    name="google",
 
     client_id=os.getenv(
         "GOOGLE_CLIENT_ID"
@@ -49,9 +52,8 @@ google = oauth.register(
     ),
 
     client_kwargs={
-        "scope": (
-            "openid email profile"
-        )
+        "scope":
+        "openid email profile"
     }
 )
 
@@ -63,11 +65,16 @@ google = oauth.register(
 @app.route("/")
 def home():
 
-    user = session.get("user")
+    user = session.get(
+        "user"
+    )
 
     if user:
+
         return redirect(
-            url_for("dashboard")
+            url_for(
+                "dashboard"
+            )
         )
 
     return render_template(
@@ -91,51 +98,78 @@ def login():
 @app.route("/authorize")
 def authorize():
 
-    token = google.authorize_access_token()
+    token = (
+        google
+        .authorize_access_token()
+    )
 
     user_info = token.get(
         "userinfo"
     )
 
     session["user"] = {
-        "name": user_info[
+
+        "name":
+        user_info[
             "name"
         ],
 
-        "email": user_info[
+        "email":
+        user_info[
             "email"
         ],
 
-        "picture": user_info[
+        "picture":
+        user_info[
             "picture"
         ]
     }
 
     return redirect(
-        url_for("dashboard")
+        url_for(
+            "dashboard"
+        )
     )
 
 
 @app.route("/dashboard")
 def dashboard():
 
-    if "user" not in session:
-        return redirect("/")
+    if (
+        "user"
+        not in session
+    ):
 
-    stats = get_dashboard_stats()
+        return redirect(
+            "/"
+        )
+
+    stats = (
+        get_dashboard_stats()
+    )
 
     recent_scams = (
         get_recent_scams()
+    )
+
+    top_category = (
+        get_top_scam_category()
+    )
+
+    average_risk = (
+        get_average_risk()
     )
 
     high_risk = 0
 
     for scam in recent_scams:
 
-        if scam.get(
-            "risk",
-            0
-        ) >= 80:
+        if (
+            scam.get(
+                "risk",
+                0
+            ) >= 80
+        ):
 
             high_risk += 1
 
@@ -143,23 +177,38 @@ def dashboard():
 
         "dashboard.html",
 
-        user=session["user"],
+        user=session[
+            "user"
+        ],
 
         protected_emails=
-        stats["protected"],
+        stats[
+            "protected"
+        ],
 
         threats_detected=
-        stats["threats"],
+        stats[
+            "threats"
+        ],
 
         threat_level=
-        stats["level"],
+        stats[
+            "level"
+        ],
 
         high_risk=
         high_risk,
 
         recent_scams=
-        recent_scams
+        recent_scams,
+
+        top_category=
+        top_category,
+
+        average_risk=
+        average_risk
     )
+
 
 @app.route("/logout")
 def logout():
@@ -167,7 +216,9 @@ def logout():
     session.clear()
 
     return redirect(
-        url_for("home")
+        url_for(
+            "home"
+        )
     )
 
 
