@@ -14,9 +14,10 @@ scam_collection = db["scams"]
 # -------------------------
 # CHECK DUPLICATE EMAIL
 # -------------------------
-def email_already_checked(message_id):
+def email_already_checked(user_email, message_id):
 
     return scam_collection.find_one({
+        "user_email": user_email,
         "message_id": message_id
     }) is not None
 
@@ -34,10 +35,9 @@ def save_scam_email(
     category,
     threat_type
 ):
-
     scam_collection.insert_one({
 
-        "user_email": user_email,   # ✅ CRITICAL FIX
+        "user_email": user_email,   # 👈 CRITICAL FIX
 
         "message_id": message_id,
         "subject": subject,
@@ -49,9 +49,15 @@ def save_scam_email(
         "reason": reason,
 
         "status": "flagged",
-        "checked_at": datetime.utcnow()
+        "checked_at": datetime.now()
     })
 
+def get_all_users_with_tokens():
+    users = db["users"].find(
+        {"gmail_token": {"$exists": True}}
+    )
+
+    return list(users)
 
 # -------------------------
 # DASHBOARD STATS (USER FILTERED)

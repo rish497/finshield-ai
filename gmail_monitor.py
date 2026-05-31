@@ -1,13 +1,28 @@
-from gmail_auth import (
-    authenticate_gmail
-)
+from gmail_auth import authenticate_gmail
 
 
 def get_recent_emails():
 
-    service = (
-        authenticate_gmail()
-    )
+    service = authenticate_gmail()
+
+    # -------------------------
+    # DEBUG: Gmail ACCOUNT INFO
+    # -------------------------
+    try:
+        profile = service.users().getProfile(userId="me").execute()
+
+        print("\n📧 GMAIL ACCOUNT ACTIVE")
+        print("Email:", profile.get("emailAddress"))
+        print("Messages Total:", profile.get("messagesTotal"))
+        print("----------------------------\n")
+
+    except Exception as e:
+        print("⚠️ Could not fetch Gmail profile:", e)
+
+    # -------------------------
+    # FETCH EMAIL LIST
+    # -------------------------
+    print("📡 Fetching latest emails...")
 
     results = (
         service
@@ -20,14 +35,19 @@ def get_recent_emails():
         .execute()
     )
 
-    messages = results.get(
-        "messages",
-        []
-    )
+    messages = results.get("messages", [])
+
+    print(f"📬 Messages found: {len(messages)}")
 
     email_data = []
 
-    for msg in messages:
+    # -------------------------
+    # PROCESS EACH EMAIL
+    # -------------------------
+    for i, msg in enumerate(messages, start=1):
+
+        print(f"\n📩 Processing email {i}/{len(messages)}")
+        print("Gmail Message ID:", msg["id"])
 
         message = (
             service
@@ -40,63 +60,34 @@ def get_recent_emails():
             .execute()
         )
 
-        headers = (
-            message[
-                "payload"
-            ]["headers"]
-        )
+        headers = message.get("payload", {}).get("headers", [])
 
         subject = ""
         sender = ""
 
         for header in headers:
 
-            if (
-                header["name"]
-                ==
-                "Subject"
-            ):
+            if header.get("name") == "Subject":
+                subject = header.get("value", "")
 
-                subject = (
-                    header["value"]
-                )
+            if header.get("name") == "From":
+                sender = header.get("value", "")
 
-            if (
-                header["name"]
-                ==
-                "From"
-            ):
+        body = message.get("snippet", "")
 
-                sender = (
-                    header["value"]
-                )
-
-        body = ""
-
-        if "snippet" in message:
-            body = (
-                message["snippet"]
-            )
+        print("📌 Subject:", subject)
+        print("📨 Sender:", sender)
+        print("📝 Snippet:", body[:80])
 
         email_data.append({
 
-            "id":
-            msg["id"],
-
-            "message_id":
-            msg["id"],
-
-            "subject":
-            subject,
-
-            "sender":
-            sender,
-
-            "body":
-            body
+            "id": msg["id"],
+            "message_id": msg["id"],
+            "subject": subject,
+            "sender": sender,
+            "body": body
         })
 
-    return (
-        service,
-        email_data
-    )
+    print("\n✅ Email fetch complete\n")
+
+    return service, email_data
