@@ -118,22 +118,34 @@ def mcp_threat_agent():
     if "user" not in session:
         return redirect("/")
 
+    return render_template(
+        "mcp_agent.html",
+        user=session["user"],
+        report=None,
+        error=None
+    )
+
+
+@app.route("/mcp-threat-agent/run")
+def run_mcp_threat_agent():
+    if "user" not in session:
+        return redirect("/")
+
     user_email = session["user"]["email"]
 
     try:
         report = generate_threat_intelligence_summary(user_email)
+        error = None
 
     except Exception as e:
-        report = (
-            "MongoDB MCP Threat Agent could not run.\n\n"
-            f"Error: {str(e)}\n\n"
-            "Make sure Node.js is available and the MongoDB MCP server can run with npx."
-        )
+        report = None
+        error = str(e)
 
     return render_template(
         "mcp_agent.html",
         user=session["user"],
-        report=report
+        report=report,
+        error=error
     )
 
 @app.route("/dashboard")
