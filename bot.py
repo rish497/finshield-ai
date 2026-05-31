@@ -18,150 +18,84 @@ from gmail_actions import (
     apply_label
 )
 
-checked_ids = set()
 
+def run_bot():
+    """
+    Background Gmail monitoring loop.
+    MUST be started from Flask thread, NOT imported directly.
+    """
 
-print(
-    "\n🛡 FinShield AI Running..."
-)
+    checked_ids = set()
 
+    print("\n🛡 FinShield AI Running...")
 
-while True:
+    while True:
 
-    try:
+        try:
 
-        service, emails = (
-            get_recent_emails()
-        )
+            # -------------------------
+            # FETCH EMAILS
+            # -------------------------
+            service, emails = get_recent_emails()
 
-        label_id = (
-            create_label_if_needed(
-                service
-            )
-        )
+            # Create Gmail label once per cycle
+            label_id = create_label_if_needed(service)
 
-        for email in emails:
+            # -------------------------
+            # PROCESS EMAILS
+            # -------------------------
+            for email in emails:
 
-            message_id = email[
-                "message_id"
-            ]
+                message_id = email.get("message_id")
+                gmail_id = email.get("id")
 
-            if (
-                email_already_checked(
-                    message_id
-                )
-            ):
+                # Skip if already stored in Mongo
+                if email_already_checked(message_id):
+                    continue
 
-                print(
-                    "⏭ Already checked"
-                )
+                # Extra in-memory safety (prevents duplicate loop processing)
+                if gmail_id in checked_ids:
+                    continue
 
-                continue
+                checked_ids.add(gmail_id)
 
-            if (
-                email["id"]
-                in checked_ids
-            ):
+                print(f"\n🔍 Checking: {email.get('subject', 'No Subject')}")
 
-                continue
-
-            checked_ids.add(
-                email["id"]
-            )
-
-            print(
-                f"\nChecking:"
-                f" {email['subject']}"
-            )
-
-            result = (
-                analyze_email(
-                    email[
-                        "subject"
-                    ],
-
-                    email[
-                        "sender"
-                    ],
-
-                    email[
-                        "body"
-                    ]
-                )
-            )
-
-            print(result)
-
-            if (
-                result[
-                    "is_scam"
-                ]
-            ):
-
-                print(
-                    "🚨 SCAM DETECTED"
-                )
-                save_scam_email(
-
-                    message_id=
-                    email[
-                        "message_id"
-                    ],
-
-                    subject=
-                    email[
-                        "subject"
-                    ],
-
-                    sender=
-                    email[
-                        "sender"
-                    ],
-
-                    risk=
-                    result[
-                        "risk"
-                    ],
-
-                    reason=
-                    result[
-                        "reason"
-                    ],
-
-                    category=
-                    result[
-                        "category"
-                    ],
-
-                    threat_type=
-                    result[
-                        "threat_type"
-                    ]
+                # -------------------------
+                # SCAM ANALYSIS
+                # -------------------------
+                result = analyze_email(
+                    email.get("subject", ""),
+                    email.get("sender", ""),
+                    email.get("body", "")
                 )
 
-                apply_label(
-                    service,
+                print("Result:", result)
 
-                    email["id"],
+                # -------------------------
+                # IF SCAM DETECTED
+                # -------------------------
+                if result.get("is_scam"):
 
-                    label_id
-                )
+                    print("🚨 SCAM DETECTED")
 
-                print(
-                    "✅ Gmail label added"
-                )
+                    save_scam_email(
+                        message_id=message_id,
+                        subject=email.get("subject", ""),
+                        sender=email.get("sender", ""),
+                        risk=result.get("risk", 0),
+                        reason=result.get("reason", ""),
+                        category=result.get("category", ""),
+                        threat_type=result.get("threat_type", "")
+                    )
 
-        print(
-            "\nSleeping..."
-        )
+                    apply_label(service, gmail_id, label_id)
 
-        time.sleep(30)
+                    print("✅ Gmail label applied")
 
-    except Exception as e:
+            print("\n⏳ Sleeping 30 seconds...\n")
+            time.sleep(30)
 
-        print(
-            "Error:",
-            e
-        )
-
-        time.sleep(30)
+        except Exception as e:
+            print("❌ Bot error:", e)
+            time.sleep(30)
