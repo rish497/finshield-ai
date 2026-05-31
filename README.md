@@ -6,6 +6,14 @@ Built for the **Google Cloud Rapid Agent Hackathon on Devpost**, FinShield AI go
 
 ---
 
+## 🌐 Live Demo
+
+Try FinShield AI here:
+
+🔗 https://finshield-ai-bwj2.onrender.com
+
+---
+
 ## 🚀 Project Overview
 
 Modern scam emails are becoming harder to detect because attackers use urgency, fear, fake branding, impersonation, and emotional manipulation to trick users into clicking links or giving away sensitive information.
