@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>FinShield MCP Threat Agent</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+    <link rel="preconnect"
+          href="https://fonts.googleapis.com">
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+          rel="stylesheet">
+</head>
+
+<body>
+
+<div class="sidebar">
+
+    <div>
+        <div class="logo">
+            <h2>🛡 FinShield AI</h2>
+        </div>
+
+        <div class="menu">
+            <a href="/dashboard">Dashboard</a>
+            <a class="active" href="/mcp-threat-agent">MCP Agent</a>
+        </div>
+    </div>
+
+    <a class="logout-btn" href="/logout">
+        Logout
+    </a>
+
+</div>
+
+<div class="main-content">
+
+    <div class="topbar">
+
+        <div>
+            <h1>MongoDB MCP Threat Agent</h1>
+            <p>
+                Agent-powered threat intelligence generated from scam history stored in MongoDB.
+            </p>
+        </div>
+
+        <div class="profile">
+            <img src="{{ user.picture }}">
+
+            <div>
+                <h4>{{ user.name }}</h4>
+                <span>{{ user.email }}</span>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="hero-card">
+
+        <span class="security-tag">
+            MONGODB MCP POWERED
+        </span>
+
+        <h2>
+            FinShield Threat Intelligence Report
+        </h2>
+
+        <p style="margin-top: 20px; white-space: pre-line; line-height: 1.8;">
+            {{ report }}
+        </p>
+
+    </div>
+
+    <div class="large-card" style="margin-top: 30px;">
+
+        <h2>How this uses MongoDB MCP</h2>
+
+        <p style="margin-top: 15px; color: #94a3b8; line-height: 1.8;">
+            FinShield AI stores scam detections in MongoDB Atlas.
+            This page uses the official MongoDB MCP server as a tool layer
+            so the agent can query stored scam history, aggregate threat patterns,
+            identify high-risk emails, and generate a personalized intelligence report.
+        </p>
+
+    </div>
+
+</div>
+
+</body>
+</html>

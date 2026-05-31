@@ -2,320 +2,281 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0">
 
-    <title>FinShield AI</title>
+    <title>FinShield AI | Gmail Scam Protection</title>
 
     <link rel="stylesheet"
-          href="{{ url_for('static',
-          filename='style.css') }}">
+          href="{{ url_for('static', filename='style.css') }}">
 
     <link rel="preconnect"
           href="https://fonts.googleapis.com">
 
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
           rel="stylesheet">
 </head>
 
-<body class="landing-body">
+<body class="premium-landing">
+
+    <div class="background-glow glow-one"></div>
+    <div class="background-glow glow-two"></div>
+    <div class="background-grid"></div>
 
     <!-- NAVBAR -->
+    <nav class="premium-nav">
 
-    <nav class="navbar">
+        <a href="/" class="brand">
+            <div class="brand-icon">🛡</div>
+            <span>FinShield AI</span>
+        </a>
 
-        <div class="logo">
-            🛡 FinShield AI
+        <div class="nav-menu">
+            <a href="#features">Features</a>
+            <a href="#how">How it works</a>
+            <a href="#security">Security</a>
         </div>
 
-        <div class="nav-links">
-
-            <a href="#features">
-                Features
-            </a>
-
-            <a href="#how">
-                How It Works
-            </a>
-
-            <a href="#stats">
-                Intelligence
-            </a>
-
-            <a href="/login"
-               class="login-btn">
-                Login
-            </a>
-
-        </div>
+        <a href="/login" class="nav-cta">
+            Launch App
+        </a>
 
     </nav>
 
-
     <!-- HERO -->
+    <main class="premium-hero">
 
-    <section class="hero">
+        <section class="hero-copy">
 
-        <div class="hero-left">
-
-            <div class="hero-badge">
-                AI Financial Scam Protection
+            <div class="hero-pill">
+                <span class="pulse-dot"></span>
+                AI-powered Gmail scam protection
             </div>
 
             <h1>
-                Protect Your Inbox
-                From Financial Scams.
+                Stop financial scams
+                before they reach you.
             </h1>
 
-            <p>
-                FinShield AI autonomously
-                detects phishing emails,
-                fake banking alerts,
-                reward scams, and
-                suspicious financial threats
-                before they fool you.
+            <p class="hero-subtitle">
+                FinShield AI connects securely with Gmail, scans your inbox for phishing,
+                fake KYC alerts, reward scams, UPI fraud, impersonation attempts, and
+                suspicious financial emails.
             </p>
 
-            <div class="hero-buttons">
+            <div class="hero-actions">
 
-                <a href="/login"
-                   class="primary-btn">
-                    Protect My Inbox
+                <a href="/login" class="google-login-btn">
+                    <span class="google-icon">
+                        <svg viewBox="0 0 48 48">
+                            <path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.1 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/>
+                            <path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.1 6.1 29.3 4 24 4 16.2 4 9.5 8.5 6.3 14.7z"/>
+                            <path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-7.9l-6.5 5C9.4 39.5 16.1 44 24 44z"/>
+                            <path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.3-2.3 4.2-4.1 5.6l6.2 5.2C36.9 39.3 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/>
+                        </svg>
+                    </span>
+                    Continue with Google
                 </a>
 
-            </div>
-
-        </div>
-
-
-        <div class="hero-right">
-
-            <div class="dashboard-preview">
-
-                <h3>
-                    Live Threat Monitor
-                </h3>
-
-                <div class="mini-alert high">
-
-                    ⚠ SBI Reward Scam
-                    <span>94%</span>
-
-                </div>
-
-                <div class="mini-alert high">
-
-                    ⚠ Fake Refund Email
-                    <span>89%</span>
-
-                </div>
-
-                <div class="mini-alert medium">
-
-                    ⚠ KYC Verification
-                    <span>72%</span>
-
+                <div class="trust-note">
+                    No passwords stored. OAuth-secured Gmail access.
                 </div>
 
             </div>
 
-        </div>
+            <div class="hero-metrics">
 
-    </section>
+                <div>
+                    <strong>24/7</strong>
+                    <span>Inbox monitoring</span>
+                </div>
 
+                <div>
+                    <strong>AI</strong>
+                    <span>Threat analysis</span>
+                </div>
+
+                <div>
+                    <strong>Auto</strong>
+                    <span>Scam labeling</span>
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- RIGHT CARD -->
+        <section class="hero-visual">
+
+            <div class="scanner-card">
+
+                <div class="scanner-header">
+
+                    <div>
+                        <p>Live Threat Scanner</p>
+                        <h3>Gmail Protection</h3>
+                    </div>
+
+                    <span class="scanner-status">
+                        Active
+                    </span>
+
+                </div>
+
+                <div class="scan-ring">
+
+                    <div class="ring-orbit"></div>
+
+                    <div class="ring-core">
+                        <span>98%</span>
+                        <small>Safe</small>
+                    </div>
+
+                </div>
+
+                <div class="threat-list">
+
+                    <div class="threat-row high-risk">
+                        <div>
+                            <strong>Fake KYC Verification</strong>
+                            <span>Suspicious banking link detected</span>
+                        </div>
+                        <b>94%</b>
+                    </div>
+
+                    <div class="threat-row medium-risk">
+                        <div>
+                            <strong>Reward Claim Email</strong>
+                            <span>Urgency-based phishing pattern</span>
+                        </div>
+                        <b>81%</b>
+                    </div>
+
+                    <div class="threat-row safe-risk">
+                        <div>
+                            <strong>Bank Statement</strong>
+                            <span>Verified sender pattern</span>
+                        </div>
+                        <b>Safe</b>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="floating-badge badge-top">
+                ⚡ Real-time AI detection
+            </div>
+
+            <div class="floating-badge badge-bottom">
+                🔒 Secure Google OAuth
+            </div>
+
+        </section>
+
+    </main>
 
     <!-- FEATURES -->
+    <section id="features" class="premium-section">
 
-    <section id="features"
-             class="features">
+        <div class="section-heading">
+            <span>Protection stack</span>
+            <h2>Built to catch modern scam tactics</h2>
+        </div>
 
-        <h2>
-            Why FinShield AI?
-        </h2>
+        <div class="premium-feature-grid">
 
-        <div class="feature-grid">
-
-            <div class="feature-card">
-
-                <h3>
-                    🧠 AI Scam Detection
-                </h3>
-
+            <div class="premium-feature-card">
+                <div class="feature-icon">🧠</div>
+                <h3>AI Email Analysis</h3>
                 <p>
-                    Gemini-powered
-                    scam analysis that
-                    understands context
-                    and phishing tactics.
+                    Detects urgency, impersonation, suspicious links, fake rewards,
+                    and emotional manipulation.
                 </p>
-
             </div>
 
-            <div class="feature-card">
-
-                <h3>
-                    📧 Gmail Protection
-                </h3>
-
+            <div class="premium-feature-card">
+                <div class="feature-icon">📧</div>
+                <h3>Gmail Monitoring</h3>
                 <p>
-                    Monitors your inbox
-                    and automatically
-                    flags suspicious
-                    financial emails.
+                    Scans recent emails and identifies risky financial messages
+                    before they fool the user.
                 </p>
-
             </div>
 
-            <div class="feature-card">
-
-                <h3>
-                    ⚡ Real-Time Detection
-                </h3>
-
+            <div class="premium-feature-card">
+                <div class="feature-icon">🏷</div>
+                <h3>Auto Labeling</h3>
                 <p>
-                    Instant scam
-                    detection and
-                    automated labeling.
+                    Suspicious emails are automatically marked with a scam warning
+                    label inside Gmail.
                 </p>
-
             </div>
 
-            <div class="feature-card">
-
-                <h3>
-                    📊 Threat Intelligence
-                </h3>
-
+            <div class="premium-feature-card">
+                <div class="feature-icon">📊</div>
+                <h3>Threat Dashboard</h3>
                 <p>
-                    Track scam trends,
-                    risks, and recent
-                    threats in one place.
+                    View detected scams, risk levels, top categories, and recent
+                    threat activity.
                 </p>
-
             </div>
 
         </div>
 
     </section>
-
 
     <!-- HOW IT WORKS -->
+    <section id="how" class="premium-section how-premium">
 
-    <section id="how"
-             class="how-section">
+        <div class="section-heading">
+            <span>Simple setup</span>
+            <h2>Protect your inbox in three steps</h2>
+        </div>
 
-        <h2>
-            How FinShield Works
-        </h2>
+        <div class="timeline">
 
-        <div class="steps">
-
-            <div class="step">
-
-                <div class="step-number">
-                    1
-                </div>
-
-                <h3>
-                    Connect Gmail
-                </h3>
-
-                <p>
-                    Securely login
-                    with Google.
-                </p>
-
+            <div class="timeline-step">
+                <div class="step-bubble">1</div>
+                <h3>Login with Google</h3>
+                <p>Connect Gmail securely using OAuth.</p>
             </div>
 
-            <div class="step">
+            <div class="timeline-line"></div>
 
-                <div class="step-number">
-                    2
-                </div>
-
-                <h3>
-                    AI Monitors Emails
-                </h3>
-
-                <p>
-                    FinShield watches
-                    for financial scams.
-                </p>
-
+            <div class="timeline-step">
+                <div class="step-bubble">2</div>
+                <h3>AI scans emails</h3>
+                <p>FinShield checks recent messages for scam signals.</p>
             </div>
 
-            <div class="step">
+            <div class="timeline-line"></div>
 
-                <div class="step-number">
-                    3
-                </div>
-
-                <h3>
-                    Threats Flagged
-                </h3>
-
-                <p>
-                    Dangerous emails
-                    are automatically
-                    detected and labeled.
-                </p>
-
+            <div class="timeline-step">
+                <div class="step-bubble">3</div>
+                <h3>Threats are flagged</h3>
+                <p>High-risk messages are labeled and shown in the dashboard.</p>
             </div>
 
         </div>
 
     </section>
 
+    <!-- SECURITY -->
+    <section id="security" class="security-panel">
 
-    <!-- STATS -->
-
-    <section id="stats"
-             class="stats-section">
-
-        <div class="big-stat">
-
-            <h1>94%</h1>
-
+        <div>
+            <span>Security first</span>
+            <h2>Your Gmail stays under your control.</h2>
             <p>
-                Scam Detection Accuracy
+                FinShield uses Google OAuth permissions to scan and label suspicious
+                emails. You can revoke access anytime from your Google Account.
             </p>
-
         </div>
 
-        <div class="big-stat">
-
-            <h1>24/7</h1>
-
-            <p>
-                Inbox Monitoring
-            </p>
-
-        </div>
-
-        <div class="big-stat">
-
-            <h1>AI</h1>
-
-            <p>
-                Powered Protection
-            </p>
-
-        </div>
-
-    </section>
-
-
-    <!-- CTA -->
-
-    <section class="cta-section">
-
-        <h2>
-            Ready to Protect
-            Your Inbox?
-        </h2>
-
-        <a href="/login"
-           class="primary-btn">
-            Protect My Inbox
+        <a href="/login" class="security-btn">
+            Start Protection
         </a>
 
     </section>

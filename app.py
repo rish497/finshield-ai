@@ -1,6 +1,7 @@
 import os
 import threading
 
+from mcp_threat_agent import generate_threat_intelligence_summary
 from authlib.integrations.flask_client import OAuth
 from dotenv import load_dotenv
 from flask import Flask, redirect, url_for, session, render_template
@@ -53,7 +54,6 @@ def start_bot_once():
     threading.Thread(target=bot.run_bot, daemon=True).start()
 
 
-# Gunicorn imports app.py; __main__ is not executed on Render.
 start_bot_once()
 
 
@@ -103,7 +103,6 @@ def authorize():
         "scopes": token_scopes,
     }
 
-    # Remove None values so Mongo does not store unusable refresh_token=None.
     token_data = {k: v for k, v in token_data.items() if v}
 
     db["users"].update_one(
@@ -114,6 +113,28 @@ def authorize():
 
     return redirect(url_for("dashboard"))
 
+@app.route("/mcp-threat-agent")
+def mcp_threat_agent():
+    if "user" not in session:
+        return redirect("/")
+
+    user_email = session["user"]["email"]
+
+    try:
+        report = generate_threat_intelligence_summary(user_email)
+
+    except Exception as e:
+        report = (
+            "MongoDB MCP Threat Agent could not run.\n\n"
+            f"Error: {str(e)}\n\n"
+            "Make sure Node.js is available and the MongoDB MCP server can run with npx."
+        )
+
+    return render_template(
+        "mcp_agent.html",
+        user=session["user"],
+        report=report
+    )
 
 @app.route("/dashboard")
 def dashboard():

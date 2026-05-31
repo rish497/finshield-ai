@@ -1,0 +1,11 @@
+{
+  "name": "finshield-ai",
+  "version": "1.0.0",
+  "description": "FinShield AI Gmail scam detection agent with MongoDB MCP threat intelligence",
+  "scripts": {
+    "mcp:mongodb": "npx -y mongodb-mcp-server@latest --readOnly"
+  },
+  "dependencies": {
+    "mongodb-mcp-server": "latest"
+  }
+}
