@@ -478,17 +478,5 @@ Built by **Rishabh Mittal** for the **Google Cloud Rapid Agent Hackathon** on De
 
 ## 📜 License
 
-This project is open source.
-
-Recommended license:
-
-```text
-MIT License
-```
-
-Before submitting to Devpost, add a file named:
-
-```text
-LICENSE
-```
+This project is licensed under the MIT License. See the LICENSE file for details.
 
