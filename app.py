@@ -139,78 +139,33 @@ def dashboard():
     if "user" not in session:
         return redirect("/")
 
-    # -------------------------
-    # DATA FETCH
-    # -------------------------
+    user_email = session["user"]["email"]
 
-    stats = get_dashboard_stats() or {}
+    stats = get_dashboard_stats(user_email)
+    recent_scams = get_recent_scams(user_email)
+    top_category = get_top_scam_category(user_email)
+    average_risk = get_average_risk(user_email)
 
-    recent_scams = get_recent_scams() or []
+    high_risk = 0
 
-    top_category = get_top_scam_category() or "No Data"
-
-    average_risk = get_average_risk() or 0
-
-    # -------------------------
-    # HIGH RISK CALCULATION
-    # -------------------------
-
-    high_risk = sum(
-        1 for scam in recent_scams
-        if scam.get("risk", 0) >= 80
-    )
-
-    # -------------------------
-    # SAFE STATS EXTRACTION
-    # -------------------------
-
-    protected_emails = stats.get(
-        "protected_emails",
-        stats.get("protected", 0)
-    )
-
-    threats_detected = stats.get(
-        "threats_detected",
-        stats.get("threats", 0)
-    )
-
-    # -------------------------
-    # THREAT LEVEL (AI SCORE)
-    # -------------------------
-
-    threat_level = max(
-        0,
-        min(
-            100,
-            100 - (high_risk * 10)
-        )
-    )
-
-    # -------------------------
-    # RENDER
-    # -------------------------
+    for scam in recent_scams:
+        if scam.get("risk", 0) >= 80:
+            high_risk += 1
 
     return render_template(
-
         "dashboard.html",
-
         user=session["user"],
 
-        protected_emails=protected_emails,
+        protected_emails=stats.get("protected_emails", 0),
+        threats_detected=stats.get("threats_detected", 0),
 
-        threats_detected=threats_detected,
-
-        threat_level=threat_level,
+        threat_level=max(0, 100 - (high_risk * 10)),
 
         high_risk=high_risk,
-
         recent_scams=recent_scams,
-
         top_category=top_category,
-
         average_risk=average_risk
     )
-
 
 @app.route("/logout")
 def logout():

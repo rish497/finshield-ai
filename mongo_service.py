@@ -5,30 +5,27 @@ from datetime import datetime
 
 load_dotenv()
 
-client = MongoClient(
-    os.getenv("MONGO_URI")
-)
+client = MongoClient(os.getenv("MONGO_URI"))
 
 db = client["finshield"]
-
 scam_collection = db["scams"]
 
 
-def email_already_checked(
-    message_id
-):
+# -------------------------
+# CHECK DUPLICATE EMAIL
+# -------------------------
+def email_already_checked(message_id):
 
-    existing = (
-        scam_collection.find_one({
-            "message_id":
-            message_id
-        })
-    )
-
-    return existing is not None
+    return scam_collection.find_one({
+        "message_id": message_id
+    }) is not None
 
 
+# -------------------------
+# SAVE SCAM EMAIL (USER FIX ADDED)
+# -------------------------
 def save_scam_email(
+    user_email,
     message_id,
     subject,
     sender,
@@ -40,168 +37,106 @@ def save_scam_email(
 
     scam_collection.insert_one({
 
-        "message_id":
-        message_id,
+        "user_email": user_email,   # ✅ CRITICAL FIX
 
-        "subject":
-        subject,
+        "message_id": message_id,
+        "subject": subject,
+        "sender": sender,
 
-        "sender":
-        sender,
+        "risk": risk,
+        "category": category,
+        "threat_type": threat_type,
+        "reason": reason,
 
-        "risk":
-        risk,
-
-        "category":
-        category,
-
-        "threat_type":
-        threat_type,
-
-        "reason":
-        reason,
-
-        "status":
-        "flagged",
-
-        "checked_at":
-        datetime.now()
+        "status": "flagged",
+        "checked_at": datetime.utcnow()
     })
 
 
-def get_dashboard_stats():
+# -------------------------
+# DASHBOARD STATS (USER FILTERED)
+# -------------------------
+def get_dashboard_stats(user_email):
 
-    threats = (
-        scam_collection
-        .count_documents({})
-    )
+    threats = scam_collection.count_documents({
+        "user_email": user_email
+    })
 
-    protected = max(
-        threats * 8,
-        threats
-    )
+    protected = max(threats * 8, threats)
 
     if threats >= 8:
         level = "HIGH"
-
     elif threats >= 4:
         level = "MEDIUM"
-
     elif threats >= 1:
         level = "LOW"
-
     else:
         level = "SAFE"
 
     return {
-        "protected":
-        protected,
-
-        "threats":
-        threats,
-
-        "level":
-        level
+        "protected_emails": protected,
+        "threats_detected": threats,
+        "level": level
     }
 
 
-def get_recent_scams():
+# -------------------------
+# RECENT SCAMS (USER FILTERED)
+# -------------------------
+def get_recent_scams(user_email):
 
-    scams = list(
-
-        scam_collection
-        .find()
-
-        .sort(
-            "_id",
-            -1
-        )
-
+    return list(
+        scam_collection.find({
+            "user_email": user_email
+        })
+        .sort("_id", -1)
         .limit(10)
-
     )
 
-    return scams
 
-def get_top_scam_category():
+# -------------------------
+# TOP CATEGORY (USER FILTERED)
+# -------------------------
+def get_top_scam_category(user_email):
 
     pipeline = [
-
+        {"$match": {"user_email": user_email}},
         {
             "$group": {
-                "_id":
-                "$category",
-
-                "count":
-                {
-                    "$sum": 1
-                }
+                "_id": "$category",
+                "count": {"$sum": 1}
             }
         },
-
-        {
-            "$sort": {
-                "count": -1
-            }
-        },
-
-        {
-            "$limit": 1
-        }
+        {"$sort": {"count": -1}},
+        {"$limit": 1}
     ]
 
-    result = list(
-        scam_collection.aggregate(
-            pipeline
-        )
-    )
+    result = list(scam_collection.aggregate(pipeline))
 
     if result:
-
-        return result[
-            0
-        ][
-            "_id"
-        ]
+        return result[0]["_id"]
 
     return "No Data"
 
 
-def get_average_risk():
+# -------------------------
+# AVERAGE RISK (USER FILTERED)
+# -------------------------
+def get_average_risk(user_email):
 
     pipeline = [
-
+        {"$match": {"user_email": user_email}},
         {
             "$group": {
-
-                "_id":
-                None,
-
-                "avgRisk":
-                {
-                    "$avg":
-                    "$risk"
-                }
+                "_id": None,
+                "avgRisk": {"$avg": "$risk"}
             }
         }
     ]
 
-    result = list(
-
-        scam_collection
-        .aggregate(
-            pipeline
-        )
-
-    )
+    result = list(scam_collection.aggregate(pipeline))
 
     if result:
-
-        return round(
-            result[0][
-                "avgRisk"
-            ],
-            1
-        )
+        return round(result[0]["avgRisk"], 1)
 
     return 0
