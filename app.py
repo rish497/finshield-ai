@@ -5,7 +5,7 @@ from mcp_threat_agent import generate_threat_intelligence_summary
 from authlib.integrations.flask_client import OAuth
 from dotenv import load_dotenv
 from flask import Flask, redirect, url_for, session, render_template
-
+import markdown
 import bot
 from mongo_service import db
 from mongo_service import (
@@ -135,16 +135,22 @@ def run_mcp_threat_agent():
 
     try:
         report = generate_threat_intelligence_summary(user_email)
+
+        report_html = markdown.markdown(
+            report,
+            extensions=["extra", "nl2br"]
+        )
+
         error = None
 
     except Exception as e:
-        report = None
+        report_html = None
         error = str(e)
 
     return render_template(
         "mcp_agent.html",
         user=session["user"],
-        report=report,
+        report=report_html,
         error=error
     )
 

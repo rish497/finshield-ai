@@ -94,9 +94,9 @@
             Threat Intelligence Report
         </h2>
 
-        <p style="margin-top: 20px; white-space: pre-line; line-height: 1.8; color: #cbd5e1;">
-            {{ report }}
-        </p>
+        <div class="report-content">
+            {{ report | safe }}
+        </div>
 
     </div>
 

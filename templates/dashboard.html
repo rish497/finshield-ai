@@ -1,473 +1,489 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
 
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0">
 
-    <title>
-        FinShield AI Dashboard
-    </title>
+    <title>FinShield AI Dashboard</title>
 
     <link rel="stylesheet"
-          href="{{ url_for('static',
-          filename='style.css') }}">
+          href="{{ url_for('static', filename='style.css') }}">
 
     <link rel="preconnect"
           href="https://fonts.googleapis.com">
 
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
           rel="stylesheet">
-
 </head>
 
-<body>
+<body class="fs-dashboard-body">
 
+    {% set safety_score = 100 - (high_risk * 3) %}
 
-<div class="sidebar">
+    {% if safety_score < 0 %}
+        {% set safety_score = 0 %}
+    {% endif %}
 
-    <div>
+    {% if safety_score > 100 %}
+        {% set safety_score = 100 %}
+    {% endif %}
 
-        <div class="logo">
+    <div class="fs-bg-grid"></div>
+    <div class="fs-glow fs-glow-one"></div>
+    <div class="fs-glow fs-glow-two"></div>
 
-            <h2>
-                🛡 FinShield AI
-            </h2>
-
-        </div>
-
-        <div class="menu">
-
-            <a class="active"
-            href="/dashboard">
-
-                Dashboard
-
-            </a>
-
-            <a href="#threats">
-
-                Threats
-
-            </a>
-
-            <a href="#analytics">
-
-                Analytics
-
-            </a>
-
-            <a href="/mcp-threat-agent">
-
-                MCP Agent
-
-            </a>
-
-        </div>
-
-    </div>
-
-    <a class="logout-btn"
-       href="/logout">
-
-        Logout
-
-    </a>
-
-</div>
-
-
-
-<div class="main-content"
-     id="dashboard">
-
-
-    <div class="topbar">
+    <!-- SIDEBAR -->
+    <aside class="fs-sidebar">
 
         <div>
-
-            <h1>
-
-                Welcome back,
-                {{ user.name.split(' ')[0] }}
-
-            </h1>
-
-            <p>
-
-                FinShield AI is actively
-                protecting your inbox.
-
-            </p>
-
-        </div>
-
-
-        <div class="profile">
-
-            <img src="{{ user.picture }}">
-
-            <div>
-
-                <h4>
-                    {{ user.name }}
-                </h4>
-
-                <span>
-                    {{ user.email }}
-                </span>
-
-            </div>
-
-        </div>
-
-    </div>
-
-
-
-    <div class="hero-card">
-
-        <div>
-
-            <span class="security-tag">
-
-                AI THREAT MONITORING
-
-            </span>
-
-            <h2>
-
-                FinShield Threat Intelligence
-
-            </h2>
-
-            <h1>
-
-                {{ 100 - (high_risk * 3) }}%
-
-            </h1>
-
-            <p>
-
-                FinShield AI continuously
-                scans Gmail for scams,
-                phishing attempts,
-                impersonation, fake
-                rewards, and suspicious
-                activity.
-
-            </p>
-
-        </div>
-
-    </div>
-
-
-
-    <div class="stats-grid">
-
-        <div class="card">
-
-            <h4>
-                Protected Emails
-            </h4>
-
-            <h1>
-                {{ protected_emails }}
-            </h1>
-
-        </div>
-
-
-        <div class="card">
-
-            <h4>
-                Threats Detected
-            </h4>
-
-            <h1>
-                {{ threats_detected }}
-            </h1>
-
-        </div>
-
-
-        <div class="card">
-
-            <h4>
-                High Risk Emails
-            </h4>
-
-            <h1>
-                {{ high_risk }}
-            </h1>
-
-        </div>
-
-
-        <div class="card">
-
-            <h4>
-                Top Scam Type
-            </h4>
-
-            <h1>
-                {{ top_category }}
-            </h1>
-
-        </div>
-
-
-        <div class="card">
-
-            <h4>
-                Average Risk
-            </h4>
-
-            <h1>
-                {{ average_risk }}%
-            </h1>
-
-        </div>
-
-    </div>
-
-
-
-    <div class="content-grid">
-
-
-        <div class="large-card"
-             id="threats">
-
-            <h2>
-                Recent Threat Detections
-            </h2>
-
-
-            {% if recent_scams %}
-
-            {% for scam in recent_scams %}
-
-            <div class="threat-item">
+            <a href="/dashboard" class="fs-brand">
+                <div class="fs-brand-icon">
+                    🛡
+                </div>
 
                 <div>
+                    <h2>FinShield AI</h2>
+                    <span>Inbox Defense Agent</span>
+                </div>
+            </a>
 
-                    <h3>
+            <nav class="fs-nav">
+                <a class="active" href="/dashboard">
+                    <span>📊</span>
+                    Dashboard
+                </a>
 
-                        ⚠ {{ scam.subject }}
+                <a href="#threats">
+                    <span>🚨</span>
+                    Threats
+                </a>
 
-                    </h3>
+                <a href="#analytics">
+                    <span>📈</span>
+                    Analytics
+                </a>
 
-                    <p>
+                <a href="/mcp-threat-agent">
+                    <span>🧠</span>
+                    MCP Agent
+                </a>
+            </nav>
+        </div>
 
-                        Sender:
-                        {{ scam.sender }}
+        <div class="fs-sidebar-bottom">
 
-                    </p>
+            <div class="fs-mini-status">
+                <div class="fs-status-dot"></div>
 
-                    <p>
+                <div>
+                    <strong>Agent Online</strong>
+                    <span>Scanning every cycle</span>
+                </div>
+            </div>
 
-                        Category:
-                        {{ scam.category }}
+            <a class="fs-logout" href="/logout">
+                Logout
+            </a>
 
-                    </p>
+        </div>
 
-                    <p>
+    </aside>
 
-                        Threat Type:
-                        {{ scam.threat_type }}
+    <!-- MAIN -->
+    <main class="fs-main">
 
-                    </p>
+        <!-- TOPBAR -->
+        <header class="fs-topbar">
 
-                    <p>
+            <div>
+                <p class="fs-eyebrow">
+                    AI Gmail Protection Dashboard
+                </p>
 
-                        Risk Score:
-                        {{ scam.risk }}%
+                <h1>
+                    Welcome back, {{ user.name.split(' ')[0] }}
+                </h1>
 
-                    </p>
+                <p class="fs-muted">
+                    FinShield is monitoring your Gmail inbox for phishing, KYC scams,
+                    fake rewards, impersonation, and financial fraud.
+                </p>
+            </div>
+
+            <div class="fs-profile-card">
+                <img src="{{ user.picture }}" alt="Profile picture">
+
+                <div>
+                    <strong>{{ user.name }}</strong>
+                    <span>{{ user.email }}</span>
+                </div>
+            </div>
+
+        </header>
+
+        <!-- HERO GRID -->
+        <section class="fs-hero-grid">
+
+            <div class="fs-command-card">
+
+                <div class="fs-command-top">
+
+                    <div>
+                        <span class="fs-pill">
+                            Live Protection
+                        </span>
+
+                        <h2>
+                            Threat Intelligence Center
+                        </h2>
+
+                        <p>
+                            Your inbox is being analyzed by a Gemini-powered scam detection
+                            agent that identifies suspicious patterns and flags dangerous emails.
+                        </p>
+                    </div>
+
+                    <div class="fs-shield-orb">
+                        <div class="fs-orb-ring"></div>
+
+                        <div class="fs-orb-core">
+                            🛡
+                        </div>
+                    </div>
 
                 </div>
 
+                <div class="fs-command-actions">
 
-                {% if scam.risk >= 80 %}
+                    <a href="/mcp-threat-agent" class="fs-primary-action">
+                        Open MCP Agent
+                    </a>
 
-                <span class="danger">
+                    <a href="#threats" class="fs-secondary-action">
+                        View Threats
+                    </a>
 
-                    High Risk
+                </div>
 
-                </span>
+            </div>
 
-                {% elif scam.risk >= 50 %}
+            <div class="fs-risk-card">
 
-                <span class="warning">
+                <div class="fs-risk-header">
+                    <span>Inbox Safety Score</span>
 
-                    Medium Risk
+                    {% if high_risk >= 5 %}
+                        <b class="fs-danger-text">Critical</b>
+                    {% elif high_risk >= 2 %}
+                        <b class="fs-warning-text">Elevated</b>
+                    {% elif high_risk >= 1 %}
+                        <b class="fs-info-text">Watch</b>
+                    {% else %}
+                        <b class="fs-safe-text">Safe</b>
+                    {% endif %}
+                </div>
 
-                </span>
+                <div class="fs-risk-score">
+                    {{ safety_score }}<small>%</small>
+                </div>
+
+                <div class="fs-risk-bar">
+                    <span class="fs-risk-bar-fill"
+                          data-score="{{ safety_score }}"></span>
+                </div>
+
+                <p>
+                    Calculated from recent high-risk detections and active scam signals.
+                </p>
+
+            </div>
+
+        </section>
+
+        <!-- STATS -->
+        <section class="fs-stats-grid">
+
+            <div class="fs-stat-card">
+                <div class="fs-stat-icon blue">📧</div>
+
+                <div>
+                    <span>Protected Emails</span>
+                    <h3>{{ protected_emails }}</h3>
+                </div>
+            </div>
+
+            <div class="fs-stat-card">
+                <div class="fs-stat-icon red">🚨</div>
+
+                <div>
+                    <span>Threats Detected</span>
+                    <h3>{{ threats_detected }}</h3>
+                </div>
+            </div>
+
+            <div class="fs-stat-card">
+                <div class="fs-stat-icon orange">⚠</div>
+
+                <div>
+                    <span>High Risk Emails</span>
+                    <h3>{{ high_risk }}</h3>
+                </div>
+            </div>
+
+            <div class="fs-stat-card">
+                <div class="fs-stat-icon purple">🧬</div>
+
+                <div>
+                    <span>Top Scam Type</span>
+                    <h3>{{ top_category }}</h3>
+                </div>
+            </div>
+
+            <div class="fs-stat-card">
+                <div class="fs-stat-icon green">📈</div>
+
+                <div>
+                    <span>Average Risk</span>
+                    <h3>{{ average_risk }}%</h3>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- CONTENT GRID -->
+        <section class="fs-content-grid">
+
+            <!-- THREATS -->
+            <div class="fs-panel" id="threats">
+
+                <div class="fs-panel-header">
+                    <div>
+                        <p class="fs-eyebrow">Recent Activity</p>
+                        <h2>Threat Detections</h2>
+                    </div>
+
+                    <span class="fs-panel-badge">
+                        {{ threats_detected }} total
+                    </span>
+                </div>
+
+                {% if recent_scams %}
+
+                    <div class="fs-threat-list">
+
+                        {% for scam in recent_scams %}
+
+                            <article class="fs-threat-card">
+
+                                <div class="fs-threat-main">
+
+                                    <div class="fs-threat-icon">
+                                        {% if scam.risk >= 80 %}
+                                            🚨
+                                        {% elif scam.risk >= 50 %}
+                                            ⚠
+                                        {% else %}
+                                            ✅
+                                        {% endif %}
+                                    </div>
+
+                                    <div>
+                                        <h3>
+                                            {{ scam.subject }}
+                                        </h3>
+
+                                        <p>
+                                            {{ scam.reason if scam.reason else "Suspicious financial scam indicators detected." }}
+                                        </p>
+
+                                        <div class="fs-threat-meta">
+                                            <span>
+                                                Sender: {{ scam.sender }}
+                                            </span>
+
+                                            <span>
+                                                Category: {{ scam.category }}
+                                            </span>
+
+                                            <span>
+                                                Type: {{ scam.threat_type }}
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="fs-risk-chip-wrap">
+
+                                    {% if scam.risk >= 80 %}
+                                        <span class="fs-risk-chip high">
+                                            High Risk
+                                        </span>
+                                    {% elif scam.risk >= 50 %}
+                                        <span class="fs-risk-chip medium">
+                                            Medium
+                                        </span>
+                                    {% else %}
+                                        <span class="fs-risk-chip low">
+                                            Low
+                                        </span>
+                                    {% endif %}
+
+                                    <strong>
+                                        {{ scam.risk }}%
+                                    </strong>
+
+                                </div>
+
+                            </article>
+
+                        {% endfor %}
+
+                    </div>
 
                 {% else %}
 
-                <span class="safe">
+                    <div class="fs-empty-state">
+                        <div>✅</div>
 
-                    Low Risk
+                        <h3>No threats detected yet</h3>
 
-                </span>
+                        <p>
+                            Your inbox currently looks safe. FinShield will display scam
+                            detections here when suspicious emails are found.
+                        </p>
+                    </div>
 
                 {% endif %}
 
             </div>
 
-            {% endfor %}
+            <!-- SIDE INTEL -->
+            <aside class="fs-side-stack">
 
-            {% else %}
+                <div class="fs-panel fs-agent-panel">
 
-            <div class="threat-item">
-
-                <div>
-
-                    <h3>
-
-                        ✅ No threats detected
-
-                    </h3>
+                    <div class="fs-panel-header">
+                        <div>
+                            <p class="fs-eyebrow">Agent Mode</p>
+                            <h2>MCP Intelligence</h2>
+                        </div>
+                    </div>
 
                     <p>
+                        Ask the MongoDB MCP Threat Agent to analyze saved scam history,
+                        summarize patterns, and recommend protective actions.
+                    </p>
 
-                        Your inbox is
-                        currently safe.
+                    <a href="/mcp-threat-agent" class="fs-full-action">
+                        Run Intelligence Agent
+                    </a>
 
+                </div>
+
+                <div class="fs-panel">
+
+                    <div class="fs-panel-header">
+                        <div>
+                            <p class="fs-eyebrow">Threat Feed</p>
+                            <h2>Security Signals</h2>
+                        </div>
+                    </div>
+
+                    <div class="fs-intel-feed">
+
+                        <div class="fs-intel-item">
+                            <span>🏦</span>
+                            <p>Banking phishing scams remain common.</p>
+                        </div>
+
+                        <div class="fs-intel-item">
+                            <span>🪪</span>
+                            <p>Fake KYC verification messages are high risk.</p>
+                        </div>
+
+                        <div class="fs-intel-item">
+                            <span>💸</span>
+                            <p>UPI and refund scam emails often use urgency.</p>
+                        </div>
+
+                        <div class="fs-intel-item">
+                            <span>🔗</span>
+                            <p>Suspicious links are automatically flagged.</p>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="fs-panel fs-health-panel">
+
+                    <p class="fs-eyebrow">System Health</p>
+
+                    <h2>
+                        {{ threat_level }}
+                    </h2>
+
+                    <p>
+                        Current threat level based on saved scam detections and average risk.
                     </p>
 
                 </div>
 
+            </aside>
+
+        </section>
+
+        <!-- ANALYTICS -->
+        <section class="fs-panel fs-analytics" id="analytics">
+
+            <div class="fs-panel-header">
+                <div>
+                    <p class="fs-eyebrow">Analytics</p>
+                    <h2>Threat Overview</h2>
+                </div>
             </div>
 
-            {% endif %}
+            <div class="fs-analytics-grid">
 
-        </div>
+                <div class="fs-analytics-card">
+                    <span>Current Threat Level</span>
+                    <strong>{{ threat_level }}</strong>
+                    <p>Overall risk classification.</p>
+                </div>
 
+                <div class="fs-analytics-card">
+                    <span>Top Threat Category</span>
+                    <strong>{{ top_category }}</strong>
+                    <p>Most frequent scam category.</p>
+                </div>
 
-
-        <div class="small-card">
-
-            <h2>
-
-                Threat Intelligence
-
-            </h2>
-
-
-            <div class="intel-item">
-
-                🚨 Banking phishing
-                scams increasing
-
-            </div>
-
-
-            <div class="intel-item">
-
-                🚨 Fake KYC scams
-                remain common
-
-            </div>
-
-
-            <div class="intel-item">
-
-                🚨 UPI fraud emails
-                are trending
+                <div class="fs-analytics-card">
+                    <span>Average Threat Risk</span>
+                    <strong>{{ average_risk }}%</strong>
+                    <p>Average risk score across detected threats.</p>
+                </div>
 
             </div>
 
+        </section>
 
-            <div class="intel-item">
+    </main>
 
-                🚨 Suspicious links
-                auto-flagged by AI
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const fills = document.querySelectorAll(".fs-risk-bar-fill");
 
-            </div>
+            fills.forEach(function (fill) {
+                const rawScore = Number(fill.dataset.score || 0);
+                const safeScore = Math.max(0, Math.min(100, rawScore));
 
-        </div>
-
-    </div>
-
-
-
-    <div class="large-card"
-         id="analytics"
-         style="margin-top: 30px;">
-
-        <h2>
-
-            Threat Analytics
-
-        </h2>
-
-
-        <div class="stats-grid">
-
-            <div class="card">
-
-                <h4>
-
-                    Current Threat Level
-
-                </h4>
-
-                <h1>
-
-                    {{ threat_level }}
-
-                </h1>
-
-            </div>
-
-
-            <div class="card">
-
-                <h4>
-
-                    Top Threat Category
-
-                </h4>
-
-                <h1>
-
-                    {{ top_category }}
-
-                </h1>
-
-            </div>
-
-
-            <div class="card">
-
-                <h4>
-
-                    Average Threat Risk
-
-                </h4>
-
-                <h1>
-
-                    {{ average_risk }}%
-
-                </h1>
-
-            </div>
-
-        </div>
-
-    </div>
-
-
-</div>
-
+                fill.style.width = safeScore + "%";
+            });
+        });
+    </script>
 
 </body>
 </html>
